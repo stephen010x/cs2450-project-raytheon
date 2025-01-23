@@ -1,6 +1,8 @@
 **General Idea:**
 Social Media but instead of post, share files/content
 
+# Old Ideas
+
 **Strong Ideas**
  - Easy
  - Multi-person posting
@@ -12,7 +14,6 @@ Social Media but instead of post, share files/content
  - Share an experience instead of a picture
  - Notification personalized to you
  - Pirated content streaming
- - 
 
 **Weak Ideas**
  - Dark mode
@@ -26,3 +27,18 @@ Social Media but instead of post, share files/content
  - Cars, game engine, football
  - $
  - Dark web version (tor link)
+
+
+# Final ideas
+
+**Final Ideas**
+ - Social media w/file sharing
+ - Upvotes / Downvotes
+ - Generally any file
+ - Global feed (nothing personalized)
+
+**If we have time**
+ - Media player/viewer for select file types
+ - Tag system / tag filtering
+ - Comments
+ - Share button
