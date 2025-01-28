@@ -9,14 +9,14 @@ Social media is often restricted to sharing certain kinds of media. We want to c
 ### Scope  
 The app will be available for mobile and desktop use. 
 
-*In scope:* \
+<u>In scope:</u> \
 Users will be able to make posts with download links for the media they want to share   
 that's compiled into a chronological timeline. Users will also be able to like and dislike posts. The app will support most popular file types
 
-*Potentially in scope:* \
+<u>Potentially in scope:</u> \
 The app will have media player support for posts so users can enjoy content in the app without needing external software. Post tagging that allows for post searches. More options for user interaction like comments and replies. 
 
-*Out of scope:* \
+<u>Out of scope:</u> \
 Different pages for types of content and different themes. Multi-user tagging. Private chats. Algorithmic post structuring, like showing what the user would be most interested in. Encryption for private chats or posts. 
 
 ### Assumptions
