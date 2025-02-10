@@ -4,7 +4,6 @@ Social Media but instead of post, share files/content
 # Old Ideas
 
 **Strong Ideas**
- - Easy
  - Multi-person posting
  - Traditional social media tasks aka posts, comments
  - Time capsule post
@@ -25,7 +24,6 @@ Social Media but instead of post, share files/content
  - HW answer sharing/tests
  - New music finding
  - Cars, game engine, football
- - $
  - Dark web version (tor link)
 
 
