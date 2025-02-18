@@ -4,9 +4,7 @@ Social Media but instead of post, share files/content
 # Old Ideas
 
 **Strong Ideas**
- - Easy
  - Multi-person posting
- - Skill based networking / Labor marketplace
  - Traditional social media tasks aka posts, comments
  - Time capsule post
  - File storage but customizable sharing
@@ -16,6 +14,7 @@ Social Media but instead of post, share files/content
  - Pirated content streaming
 
 **Weak Ideas**
+ - Skill based networking / Labor marketplace
  - Dark mode
  - Encryption
  - Separate Customizable "For you" pages
@@ -25,7 +24,6 @@ Social Media but instead of post, share files/content
  - HW answer sharing/tests
  - New music finding
  - Cars, game engine, football
- - $
  - Dark web version (tor link)
 
 
