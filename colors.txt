@@ -1,3 +1,3 @@
 Stephen = aquamarine?
 Andy = Lavender
-Nathan = Navy blue
+Nathan = blue
