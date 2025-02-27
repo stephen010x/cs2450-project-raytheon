@@ -1,22 +1,49 @@
 import tinydb
+import bcrypt # Used to make hashed passwords
+import re # Used to create strong passwords
+
+def is_strong_password(password):
+    #Check if password is strong: at least 8 chars, includes letters, numbers, and symbols
+    if len(password) < 8:
+        return False
+    if not re.search(r"[A-Za-z]", password):  # Must have letters
+        return False
+    if not re.search(r"\d", password):  # Must have numbers
+        return False
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):  # Must have symbols
+        return False
+    return True
 
 def new_user(db, username, password):
     users = db.table('users')
     User = tinydb.Query()
     if users.get(User.username == username):
-        return None
+        return "Username already exists!" # Prevents Duplicate usernames
+    
+    # Enforce strong passwords
+    if not is_strong_password(password):
+        return "Password must be at least 8 characters long and contain a mix of letters, numbers, and symbols.", "danger"
+
+    # Creates a hashed password to store in the database
+    hashed_pass = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
     user_record = {
             'username': username,
             'password': password,
             'friends': []
             }
-    return users.insert(user_record)
+    return "User {} created successfully!".format(username), "success"
 
 def get_user(db, username, password):
     users = db.table('users')
     User = tinydb.Query()
-    return users.get((User.username == username) &
-            (User.password == password))
+    # Uses hashed password to access users from database
+    user = users.get(User.username == username)
+    if user:
+        if bcrypt.checkpw(password.encode(), user['password'].encode()):
+            return user
+        else:
+            return None # Return None if password is incorrect
+    return None # return None if User does not exist
 
 def get_user_by_name(db, username):
     users = db.table('users')
