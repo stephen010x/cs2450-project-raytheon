@@ -34,8 +34,9 @@
                     // print links to files to page
                     for (let i = 0; i < data.message.length; i++) {
                         let link = document.createElement('a');
-                        link.href = data.message[i];
-                        link.textContent = data.message[i];
+                        let file = data.message[i];
+                        link.href = file.url;
+                        link.textContent = file.name;
                         link.target = "_blank";
                         linkdiv.appendChild(link);
                         linkdiv.appendChild(document.createElement('br'));
