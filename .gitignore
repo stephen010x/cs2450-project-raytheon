@@ -2,3 +2,6 @@ __pycache__/
 db.json
 files/*
 *.old
+*.broken.*
+*.diff.*
+*.old.*

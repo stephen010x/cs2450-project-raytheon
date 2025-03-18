@@ -18,7 +18,7 @@ def convert_time(ts):
     """A jinja template helper to convert timestamps to timeago."""
     return timeago.format(ts, time.time())
 
-from handlers.files import *
+#from handlers.files import *
 
 app.register_blueprint(friends.blueprint)
 app.register_blueprint(login.blueprint)
