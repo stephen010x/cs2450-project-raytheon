@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Upload Test</title>
+        <script>
+            function upload_file() {
+                const file_input = document.getElementById('file_input');
+                const files = file_input.files
+                const formdata = new FormData();
+
+                // add files to formdata
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    formdata.append('files[]', file);
+                }
+
+                // send formdata, and fetch the links to the upload files
+                // on the server, and return them.
+                return fetch ('/upload', {
+                    method: 'POST',
+                    body: formdata
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // get div elements
+                    let textdiv = document.getElementById('status_container');
+                    let linkdiv = document.getElementById('link_container');
+
+                    // print upload status to page
+                    let text = document.createElement('p');
+                    text.textContent = "File(s) Successfully Uploaded";
+                    textdiv.appendChild(text)
+                    
+                    // print links to files to page
+                    for (let i = 0; i < data.message.length; i++) {
+                        let link = document.createElement('a');
+                        let file = data.message[i];
+                        link.href = file.url;
+                        link.textContent = file.name;
+                        link.target = "_blank";
+                        linkdiv.appendChild(link);
+                        linkdiv.appendChild(document.createElement('br'));
+                    }
+                    
+                    return data;
+                })
+                .catch(error => {
+
+                    // get div elements
+                    let textdiv = document.getElementById('status_container');
+
+                    // print upload status to page
+                    let text = document.createElement('p');
+                    text.textContent = "Error Uploading File(s)! (see console)";
+                    textdiv.appendChild(text)
+                    
+                    console.error('Error Uploading File(s):', error);
+                    
+                    return null;
+                });
+            }
+        </script>
+    </head>
+    
+    <body>
+        <input type="file" id="file_input" multiple>
+        <button onclick="upload_file()">Upload File</button>
+        <div id="status_container"></div>
+        <div id="link_container"></div>
+        
+        <!--form method="POST" action="" enctype="multipart/form-data">
+	        <input type="file" name="file">
+	        <input type="submit" value="Upload">
+	    </form-->
+    </body>
+</html>
