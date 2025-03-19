@@ -1,7 +1,7 @@
 import time
 import tinydb
 
-def add_post(db, user, text, file_url):
+def add_post(db, user, text, file_url=None):
     posts = db.table('posts')
     posts.insert({
         'user': user['username'], 
