@@ -10,7 +10,7 @@ import db
 
 # this is just to root out syntax errors in the module
 # because they don't display properly otherwise
-from db import files as ignore_me
+from db import files as dbfiles
 
 #import os
 #import random
@@ -18,17 +18,20 @@ from db import files as ignore_me
 #from flask import request, send_file
 
 
-app = flask.Flask(__name__)
+#from youface import app
+#app = flask.Flask(__name__)
 
 
 # I don't know why the other handlers don't require this
 template_folder = "../templates"
-blueprint = flask.Blueprint("upload_test", __name__, template_folder=template_folder)
+#blueprint = flask.Blueprint("upload_test", __name__, template_folder=template_folder)
+blueprint = flask.Blueprint("upload_test", __name__)
 
 
 
 # allright, the discarded filename at the end might be enough to spoof the name
-@app.route('/file/<file_hash>/<file_name>')
+#@app.route('/file/<file_hash>/<file_name>')
+@blueprint.route('/file/<file_hash>/<file_name>')
 def file(file_hash, file_name):
     #filepath = f'{DDIR}/{hash}'
     #if os.path.exists(filepath) and os.path.isfile(filepath):
@@ -36,11 +39,11 @@ def file(file_hash, file_name):
     #else:
     #    flask.abort(404)
     mydb = db.helpers.load_db()
-    entry = db.files.get_file(mydb, file_hash)
+    entry = dbfiles.get_file(mydb, file_hash)
 
     if not os.path.exists(entry['path']):
         # TODO: implement later
-        #db.files.delete_file(entry['hash'])
+        #dbfiles.delete_file(entry['hash'])
         flask.abort(404)
     
     if entry:
@@ -50,7 +53,8 @@ def file(file_hash, file_name):
 
 
 
-@app.route('/upload', methods=['POST'])
+#@app.route('/upload', methods=['POST'])
+@blueprint.route('/upload', methods=['POST'])
 def upload():
     files = flask.request.files.getlist('files[]')
     mydb = db.helpers.load_db()
@@ -63,7 +67,7 @@ def upload():
 
     for file in files:
         # add file to db, and retrieve entry for response
-        entry = db.files.add_file(mydb, user, file)
+        entry = dbfiles.add_file(mydb, user, file)
         
         response_links.append({
             'hash' : entry['hash'],
@@ -73,6 +77,9 @@ def upload():
             'user' : entry['user'],
             'time' : entry['time'],
         })
+
+    print("yolo")
+    print(flask.jsonify(message=response_links))
 
     # pickle list array to be sent back to client
     return flask.jsonify(message=response_links)

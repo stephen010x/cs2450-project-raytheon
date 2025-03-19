@@ -41,10 +41,12 @@ def login():
 
     submit = flask.request.form.get('type')
     if submit == 'Create':
-        if users.new_user(db, username, password) is None:
+        user, error = users.new_user(db, username, password)
+        if user is None:
             resp.set_cookie('username', '', expires=0)
             resp.set_cookie('password', '', expires=0)
-            flask.flash('Username {} already taken!'.format(username), 'danger')
+            #flask.flash('Username {} already taken!'.format(username), 'danger')
+            flask.flash(error, 'danger')
             return flask.redirect(flask.url_for('login.loginscreen'))
         flask.flash('User {} created successfully!'.format(username), 'success')
     elif submit == 'Delete':

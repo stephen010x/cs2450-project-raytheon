@@ -30,6 +30,9 @@ def add_file(db, user, file):
     file_path = f'{DDIR}/{file_hash}.{file_ext}'
     file_url = f'/file/{file_hash}/{urllib.parse.quote(file_name)}'
 
+    if not os.path.exists(DDIR):
+	    os.makedirs(DDIR)
+
     # store file on server
     file.save(file_path)
 
