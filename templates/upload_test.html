@@ -28,6 +28,7 @@
 
                     // print upload status to page
                     let text = document.createElement('p');
+                    text.classList.add("success-msg")
                     text.textContent = "File(s) Successfully Uploaded";
                     textdiv.appendChild(text)
                     
@@ -51,6 +52,7 @@
 
                     // print upload status to page
                     let text = document.createElement('p');
+                    text.classList.add("fail-msg")
                     text.textContent = "Error Uploading File(s)! (see console)";
                     textdiv.appendChild(text)
                     
@@ -64,7 +66,7 @@
     
     <body>
         <input type="file" id="file_input" multiple>
-        <button onclick="upload_file()">Upload File</button>
+        <button id="upload_btn" onclick="upload_file()">Upload File</button>
         <div id="status_container"></div>
         <div id="link_container"></div>
         

@@ -101,6 +101,7 @@ def get_user_by_name(db, username):
 def delete_user(db, username, password):
     users = db.table('users')
     User = tinydb.Query()
+    user = users.get((User.username == username) & (User.passhash.exists()))
     
     # Jeez. Why wasn't hashing implemented to this function too???
     #return users.remove((User.username == username) &
