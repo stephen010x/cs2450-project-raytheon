@@ -21,14 +21,14 @@ from db import helpers, users
 # =================
 # 1. test auto-login
 # 2. test login
-# 3. test account creation
-# 4. test account deletion
-# 5. test invalid login
-# 6. test file upload
-# 7. test file download
-# 8. test post creation
-# 9. test add friend
-# 10.test logout
+# 3. test logout
+# 4. test account creation
+# 5. test account deletion
+# 6. test invalid login
+# 7. test file upload
+# 8. test file access
+# 9. test post creation
+# 10.test add friend
 
 # '[PASSED]'
 # '[FAILED]'
@@ -525,28 +525,6 @@ class Tests:
 
 
 
-# 
-# 
-# 
-# 
-# try:
-    # driver.get("http://localhost:5000/loginscreen")
-    # time.sleep(2)
-# 
-    # print("--= Beginning Tests =--")
-    # login_button = driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Login']")
-# 
-    # if login_button:
-        # print("[PASSED] - Login Button Exists.")
-    # else:
-        # print("[FAILED] - Login button not found.")
-# 
-# except Exception as e:
-    # print("Error:", e)
-# 
-# finally:
-    # print("--= Ending Tests =--")
-    # driver.quit()
 
 
 
