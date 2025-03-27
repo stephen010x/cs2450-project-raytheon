@@ -2,6 +2,7 @@ import flask
 
 from handlers import copy
 from db import posts, users, helpers
+from db import search as dbsearch
 
 blueprint = flask.Blueprint("login", __name__)
 
@@ -84,12 +85,15 @@ def index():
 
     # get the info for the user's feed
     friends = users.get_user_friends(db, user)
-    all_posts = []
-    for friend in friends + [user]:
-        all_posts += posts.get_posts(db, friend)
+    #all_posts = []
+    #for friend in friends + [user]:
+    #    all_posts += posts.get_posts(db, friend)
     # sort posts
-    sorted_posts = sorted(all_posts, key=lambda post: post['time'], reverse=True)
+    #print(all_posts)
+    #sorted_posts = sorted(all_posts, key=lambda post: post['time'], reverse=True)
 
-    return flask.render_template('feed.html', title=copy.title,
+    sorted_posts = dbsearch.get_posts(db, "sort:date _end:50")
+
+    return flask.render_template('home.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
             friends=friends, posts=sorted_posts)

@@ -9,7 +9,7 @@ import timeago
 import tinydb
 
 # handlers
-from handlers import friends, login, posts, files
+from handlers import friends, login, posts, files, search
 
 app = flask.Flask(__name__)
 
@@ -24,6 +24,7 @@ app.register_blueprint(friends.blueprint)
 app.register_blueprint(login.blueprint)
 app.register_blueprint(posts.blueprint)
 app.register_blueprint(files.blueprint)
+app.register_blueprint(search.blueprint)
 
 app.secret_key = 'mygroup'
 app.config['SESSION_TYPE'] = 'filesystem'
