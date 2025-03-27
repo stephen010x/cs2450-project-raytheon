@@ -12,9 +12,15 @@ def add_post(db, user, text, file_hashes=[], tags={}, time_override=None):
     })
 
 def get_posts(db, user):
-    posts = db.table('posts')
+
+    raise RuntimeError("Error: This get_posts is outdated. Get files using search API instead")
+
+    dbposts = db.table('posts')
     Post = tinydb.Query()
-    post = posts.search(Post.user==user['username'])
-    print(post)
-    post['tags'] = set(post['tags'])
-    return post
+    posts = dbposts.search(Post.user==user['username'])
+    #print("====================")
+    #print(post)
+    for post in posts:
+        post['tags'] = set(post['tags'])
+        
+    return posts

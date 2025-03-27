@@ -9,6 +9,8 @@ from db import posts as dbposts
 from datetime import datetime, timedelta
 from dateutil import parser
 
+import markdown
+
 
 
 def parse_date(date):
@@ -87,10 +89,24 @@ def get_posts(db, query):
 
 
 
+def adjust_posts(db, posts):
+    #file_table = db.table('files')
+    for post in posts:
+        files = dbfiles.get_files_from_hashes(db, post['files'])
+        post.update({'tags': set(post['tags'])})
+        post.update({'files': files})
+        post.update({'html': markdown.markdown(post['text'],
+            extensions=['markdown.extensions.nl2br'])})
+
+    return posts
+
+
+
+
 def _get_posts(db, query):
 
     tokens = query.split(' ')
-    
+
     if len(tokens) == 1 and tokens[0] == '':
         tokens = []
 
@@ -154,16 +170,18 @@ def _get_posts(db, query):
         #    traceback.print_exc()
 
     post_table = db.table('posts')
-    file_table = db.table('files')
+    #file_table = db.table('files')
     
     posts = post_table.search(post_filter_generator(tags_in, tags_out, before, after, user_in, user_out))
 
-    for post in posts:
-        files = dbfiles.get_files_from_hashes(db, post['files'])
-        post.update({'files': files})
+    #for post in posts:
+    #    files = dbfiles.get_files_from_hashes(db, post['files'])
+    #    post.update({'files': files})
 
     #for post in post_sorter(posts, sort):
     #    print(post)
+
+    adjust_posts(db, posts)
 
     sorted_posts = post_sorter(posts, sort)
 
