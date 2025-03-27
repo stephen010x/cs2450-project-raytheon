@@ -92,7 +92,7 @@ def index():
     #print(all_posts)
     #sorted_posts = sorted(all_posts, key=lambda post: post['time'], reverse=True)
 
-    sorted_posts = dbsearch.get_posts(db, "sort:date _end:50")
+    sorted_posts = dbsearch.get_posts(db, "sort:newest _end:50")
 
     return flask.render_template('home.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,

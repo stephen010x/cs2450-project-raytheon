@@ -2,6 +2,7 @@ import flask
 
 from handlers import copy
 from db import posts, users, helpers
+from db import search as dbsearch
 
 blueprint = flask.Blueprint("friends", __name__)
 
@@ -62,7 +63,8 @@ def view_friend(fname):
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     friend = users.get_user_by_name(db, fname)
-    all_posts = posts.get_posts(db, friend)[::-1] # reverse order
+    #all_posts = posts.get_posts(db, friend)[::-1] # reverse order
+    all_posts = dbsearch.get_posts(db, "sort:newest user:{} _end:50".format(friend['username']))
 
     return flask.render_template('friend.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
