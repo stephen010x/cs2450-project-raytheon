@@ -1,0 +1,28 @@
+
+<div class="form-group card bg-light" style="justify-content: center">
+  <div style="display:flex; flex-direction:row; padding: 5px; max-width:800px;">
+    <div style="display:inline-block; width:100%; padding:5px 50px">
+      <input type="text" id="search-bar" name="search" placeholder="sort:date" 
+        style="flex-grow:1; padding:5px; width:100%;" 
+        onkeydown="if(event.key === 'Enter') { runSearch(); return false; }">
+    </div>
+    <div style="display:inline-block; width:fit-content; padding: 5px 50px 5px 0px">
+      <script>
+        var getUrlVar = function(name) {
+            const url = window.location.search;
+            const params = new URLSearchParams(url);
+            return params.get(name);                    
+        }
+    	var runSearch = function() {
+            const input = document.getElementById('search-bar').value
+            href = "/search?query=" + encodeURIComponent(input) + "&page=1"
+            window.location.href = href
+    	}
+    	input = document.getElementById('search-bar')
+    	input.value = getUrlVar('query')
+      </script>
+      <button onclick="runSearch()" type="submit" class="btn btn-primary" 
+        name="post-search">Search</button>
+    </div>
+  </div>
+</div>

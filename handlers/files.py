@@ -25,7 +25,7 @@ from db import files as dbfiles
 # I don't know why the other handlers don't require this
 template_folder = "../templates"
 #blueprint = flask.Blueprint("upload_test", __name__, template_folder=template_folder)
-blueprint = flask.Blueprint("upload_test", __name__)
+blueprint = flask.Blueprint("upload", __name__)
 
 
 

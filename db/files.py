@@ -68,7 +68,18 @@ def get_file(db, file_hash):
     return files.get(tinydb.Query()['hash'] == file_hash)
 
 
-def get_files(db, username, file_name=None):
+#def get_file(db, url):
+#    files = db.table('files')
+#    return files.get(tinydb.Query()['hash'] == file_hash)
+
+
+
+# def get_file_with_url(db, file_url):
+    # files = db.table('files')
+    # return files.get(tinydb.Query()['hash'] == file_hash)
+
+
+def get_user_files(db, username, file_name=None):
     files = db.table('files')
 
     if file_name:
@@ -78,3 +89,14 @@ def get_files(db, username, file_name=None):
         )
 
     return files.search((tinydb.Query()['user'] == username))
+
+
+
+
+def get_files_from_hashes(db, hashes):
+    files = []
+
+    for hash in hashes:
+        file.append(get_file(db, hash))
+
+    return files
