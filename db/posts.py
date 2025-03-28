@@ -20,7 +20,7 @@ def get_posts(db, user):
     posts = dbposts.search(Post.user==user['username'])
     #print("====================")
     #print(post)
-    for post in posts:
-        post['tags'] = set(post['tags'])
+    #for post in posts:
+    #    post['tags'] = set(post['tags'])
         
     return posts

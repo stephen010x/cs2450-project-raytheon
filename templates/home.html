@@ -11,25 +11,88 @@
     <div class="card bg-light mb-3">
       <div class="card-body">
         <h3 class="card-title">New Post</h3>
-        <form method="post" action="/post">
+        <script src="{{ url_for('static', filename='upload.js') }}"></script>
+        <script>
+            function updateFileText(input, id) {
+                const length = input.files.length;
+                let text;
+                
+                if (length == 0) {
+                    text = "No files selected.";
+                } else if (length == 1) {
+                    text = input.files[0].name;
+                } else if (length >= 2) {
+                    text = String(length) + " files selected.";
+                }
+                
+                document.getElementById(id).textContent = text;
+            }
+
+            function upload_files(input_id, output_id) {
+                return uploadFiles(input_id).then(data => {
+                    if (data !== null) {
+                        //console.log("data:")
+                        //console.log(data);
+                        let files = data.message;
+                        let hashes = "";
+                        for (let i = 0; i < files.length; i++) {
+                            console.log(files[i]);
+                            hashes += files[i].hash;
+                            if (i < files.length - 1)
+                                hashes += ',';
+                        }
+                        document.getElementById(output_id).value = hashes;
+                        return true;
+                    } else {
+                        document.getElementById(output_id).value = "{error}";
+                        return false;
+                    }
+                })
+            }
+
+            //console.log(upload_files);
+
+            function submit_form(form_id, file_input_id, file_output_id, error_id) {
+                // this nested 'then' return scheme hell that I have been forced 
+                // to comply with is why nobody likes javascript. Good lord.
+                // TODO: if multiple upload file requests are made at once, 
+                // it often causes the database to corrupt itself.
+                // add some sort of atomic operation for this in flask.
+                upload_files(file_input_id, file_output_id).then(ok => {
+                    if (ok) {
+                        document.getElementById(form_id).submit();
+                    } else {
+                        document.getElementById(error_id).textContent = 
+                            "Error uploading files. (see console logs)";
+                    }
+                });
+                //return false;
+            }
+        </script>
+        <form id="post-form" method="post" action="/post">
           <div class="form-group">
-            <textarea class="form-control" name="post" rows="3" placeholder="What's on your mind?"></textarea>
+            <textarea class="form-control" name="post" rows="3" 
+              placeholder="What's on your mind?"></textarea>
           </div>
-          <button type="submit" class="btn btn-primary" name="post-submit">Submit</button>
+          <div class="form-group">
+            <input class="form-control" type="text" id="tag-input" name="tags" 
+              placeholder="Enter comma separated tags here">
+          </div>
+          <!--div style="padding:10px 40px"><span id="file-text">test text</span></div-->
+          <button type="submit" class="btn btn-primary" name="post-submit"
+            onclick="event.preventDefault(); submit_form('post-form', 'file-upload', 'file-hashes', 'file-text')">Submit</button>
+          <label class="btn btn-dark" for="file-upload" style="margin:0.375rem 0.5rem">Upload Files</label>
+          <input type="file" id="file-upload" style="display:none;"
+            onchange="updateFileText(this, 'file-text')" multiple>
+          <span id="file-text"></span>
+          <input id="file-hashes" name="files" style="display:none;">
         </form>
       </div>
     </div>
 
     <h2 class="">My Feed</h2>
-    <!--{% for post in posts %}
-    <div class="card bg-light">
-      <div class="card-body">
-        <h4 class="card-title">{{ post.user }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{ post.time|convert_time }}</h6>
-        <p class="card-text">{{ post.text }}</p>
-      </div>
-    </div>
-    {% endfor %}-->
+
+    
     {% include 'feed.html' %}
 
     

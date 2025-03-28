@@ -45,6 +45,7 @@ def add_file(db, user, file):
         'user' : user['username'] if user else 'anonymous',
         'time' : time.time(),
     }
+    print(entry)
     files.insert(entry)
     
     # returns an object-like structure with the above properties
@@ -97,6 +98,6 @@ def get_files_from_hashes(db, hashes):
     files = []
 
     for hash in hashes:
-        file.append(get_file(db, hash))
+        files.append(get_file(db, hash))
 
     return files

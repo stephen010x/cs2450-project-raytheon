@@ -10,9 +10,9 @@
     </head>
 
     <body>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <!--nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-          <a class="navbar-brand" href="/">{{ title }}</a>
+          <a class="navbar-brand" href="/">{\\{ title }\\}</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -27,15 +27,17 @@
               </li>
             </ul>
             <ul class="navbar-nav pull-right">
-              {% if user %}
+              {\\% if user %\\}
               <form method="post" action="/logout">
                 <button type="submit" class="form-control btn btn-secondary" name="logout">Logout</button>
               </form>
-              {% endif %}
+              {\\% endif %\\}
             </ul>
           </div>
         </div>
-      </nav>
+      </nav-->
+
+      {% include 'nav.html' %}
 
 
 

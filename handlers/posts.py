@@ -18,6 +18,9 @@ def post():
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     post = flask.request.form.get('post')
-    posts.add_post(db, user, post)
+    tags = flask.request.form.get('tags').replace(' ', '').split(',')
+    files = flask.request.form.get('files').replace(' ', '').split(',')
+    #print(post, tags, files)
+    posts.add_post(db, user, post, files, tags)
 
     return flask.redirect(flask.url_for('login.index'))

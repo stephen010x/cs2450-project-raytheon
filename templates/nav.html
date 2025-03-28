@@ -1,4 +1,31 @@
-{% extends "base.html" %}
+<!--{\\% extends "base.html" %\\}
 
-{% block nav %}
-{% endblock %}
+{\\% block nav %\\}
+{\\% endblock %\\}-->
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary"">
+  <div class="container">
+    <a class="navbar-brand" href="/">{{ title }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" 
+        aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Files</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://utahtech.edu">Utah Tech</a></li>
+      </ul>
+      <ul class="navbar-nav pull-right">
+        {% if user %}
+        <form method="post" action="/logout">
+          <button type="submit" class="form-control btn btn-secondary" name="logout">Logout</button>
+        </form>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
