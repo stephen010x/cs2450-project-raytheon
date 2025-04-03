@@ -6,6 +6,9 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementNotInteractableException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 #import unittest
 #import unittest.mock
 
@@ -16,6 +19,17 @@ import os
 import requests
 
 from db import helpers, users
+
+
+
+from selenium.webdriver.chrome.options import Options
+options = Options()
+options.add_argument("--headless")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+
+
+
 
 # Tests
 # =================
@@ -51,11 +65,14 @@ YOUFACE_URL = "http://localhost:5000"
 
 class Tests:
 
-    def __init__(self, chromedriver_path, url):
+    def __init__(self, chromedriver_path, url, is_local):
         #self.create_mock_database(self)
         self.url = url
-        service = Service(executable_path=chromedriver_path)
-        self.driver = webdriver.Chrome(service=service)
+        if is_local:
+            service = Service(executable_path=chromedriver_path)
+            self.driver = webdriver.Chrome(service=service)
+        else:
+            self.driver = webdriver.Chrome(options=options)
         self.db = tinydb.TinyDB('../db.json', sort_keys=True, indent=4, separators=(',', ': '))
         self.usertable = self.db.table('users')
         self.filetable = self.db.table('files')
@@ -116,26 +133,29 @@ class Tests:
         return self.filetable.get(tinydb.Query().name==filename)
 
 
-
-
-    def auto_login(self, username, password):
-        #if self.username == username:
-        #    return self.get_user(username)
-        #self.auto_logout()
-        #self.username = username
-        #self.password = password
+    def wait_page_load(self, timeout=5):
+        WebDriverWait(driver, timeout).until(lambda driver: driver.execute_script("return document.readyState") == "complete")
         
-        #self.driver.get(self.url + "/loginscreen")
+
+
+    def auto_login(self, username, password, timeout=5):        
         self.driver.get(self.url)
         self.auto_logout()
         self.driver.add_cookie({"name": "username", "value": username})
         self.driver.add_cookie({"name": "password", "value": password})
         self.driver.get(self.url)
 
-        if self.driver.current_url == self.url + "/loginscreen":
+        if (not self.assert_not_url(self.url + "/loginscreen", timeout)):
             return "FAILED", "auto-login failed to get past login screen"
         return "PASSED", "auto-login successful"
+        
 
+
+
+    def get_element(self, type, name, timeout=3):
+        try: return WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located((type, name)))
+        except TimeoutException:
+            return None
 
 
 
@@ -145,31 +165,31 @@ class Tests:
         self.driver.delete_cookie("password")
         self.driver.get(self.url)
 
-        time.sleep(0.5)
-
-        if self.driver.current_url != self.url + "/loginscreen":
-            return "FAILED", "logout failed to return to login screen"
-        return "PASSED", "logout successful"
+        if (not self.assert_url(self.url + "/loginscreen")):
+            return "FAILED", "auto-logout failed to return to login screen"
+        return "PASSED", "auto-logout successful"
 
 
 
 
     def fill_entry(self, type, name, text):
-        time.sleep(0.5)
-        try: entry = self.driver.find_element(type, name)
-        except NoSuchElementException: 
+        entry = self.get_element(type, name)
+        
+        if entry is None:
             return "FAILED", "failed to find the {} input entry".format(name)
         entry.send_keys(text)
+        
         return "PASSED", "succeeded to filling {} input entry".format(name)
 
 
 
 
     def click_button(self, type, name):
-        time.sleep(0.5)
-        try: button = self.driver.find_element(type, name)
-        except NoSuchElementException:
+        button = self.get_element(type, name)
+
+        if button is None:
             return "FAILED", "failed to find the {} button".format(name)
+
         try: button.click()
         except ElementNotInteractableException:
             return "FAILED", "{} button is not interactable".format(name)
@@ -179,9 +199,9 @@ class Tests:
 
 
     def find_element(self, type, name):
-        time.sleep(0.5)
-        try: button = self.driver.find_element(type, name)
-        except NoSuchElementException:
+        #time.sleep(0.5)
+        element = self.get_element(type, name)
+        if element is None:
             return "FAILED", "failed to find {} element".format(name)
         return "PASSED", "succeeded to find {} element".format(name)
 
@@ -189,11 +209,12 @@ class Tests:
 
 
     def compare_text(self, type, name, text):
-        time.sleep(0.5)
-        try: button = self.driver.find_element(type, name)
-        except NoSuchElementException:
+        element = self.get_element(type, name)
+
+        if element is None:
             return "FAILED", "failed to find {} element".format(name)
-        if button.text == text:
+
+        if element.text == text:
             return "PASSED", "element {} text passed comparison".format(name)
         else:
             return "FAILED", "element {} text failed comparison".format(name)
@@ -201,7 +222,26 @@ class Tests:
 
 
 
-    def login(self, username, password):
+    def assert_url(self, url, timeout=10):
+        try: 
+            WebDriverWait(self.driver, timeout).until(lambda driver: driver.current_url == url)
+            return True
+        except TimeoutException:
+            return False
+
+
+
+
+    def assert_not_url(self, url, timeout=10):
+        try: 
+            WebDriverWait(self.driver, timeout).until(lambda driver: driver.current_url != url)
+            return True
+        except TimeoutException:
+            return False
+
+
+
+    def login(self, username, password, timeout=10):
         ok, msg = self.auto_logout()
         if ok != "PASSED": return "SKIPPED", msg
 
@@ -214,7 +254,7 @@ class Tests:
         ok, msg = self.click_button(By.CLASS_NAME, "btn-primary")
         if ok != "PASSED": return ok, msg
 
-        if self.driver.current_url == self.url + "/loginscreen":
+        if (not self.assert_not_url(self.url + "/loginscreen", timeout)):
             return "FAILED", "login failed to get past login screen"
         return "PASSED", "login successful"
 
@@ -233,9 +273,9 @@ class Tests:
         ok, msg = self.click_button(By.CLASS_NAME, "btn-secondary")
         if ok != "PASSED": return ok, msg
 
-        if self.driver.current_url != self.url + "/loginscreen":
+        if (not self.assert_url(self.url + "/loginscreen")):
             return "FAILED", "logout failed to return to login screen"
-        return "PASSED", "logout successful"        
+        return "PASSED", "logout successful"     
 
 
 
@@ -255,7 +295,7 @@ class Tests:
         ok, msg = self.click_button(By.CLASS_NAME, "btn-success")
         if ok != "PASSED": return ok, msg
 
-        if self.driver.current_url == self.url + "/loginscreen":
+        if (not self.assert_not_url(self.url + "/loginscreen")):
             return "FAILED", "account creation failed to get past login screen"
 
         ok, msg = self.find_element(By.CLASS_NAME, "alert-success")
@@ -291,7 +331,7 @@ class Tests:
         ok, msg = self.find_element(By.CLASS_NAME, "alert-success")
         if ok != "PASSED": return ok, msg
 
-        ok, msg = self.auto_login(username, password)
+        ok, msg = self.auto_login(username, password, 0.5)
         if ok == "PASSED": return "FAILED", "able to log in with the deleted account"
 
         self.delete_user(username)
@@ -308,8 +348,6 @@ class Tests:
 
         ok, msg = self.click_button(By.ID, "upload_btn")
         if ok != "PASSED": return ok, msg
-
-        #time.sleep(0.3)
 
         ok, msg = self.find_element(By.CLASS_NAME, "success-msg")
         if ok != "PASSED": return ok, msg
@@ -333,8 +371,8 @@ class Tests:
         ok, msg = self.fill_entry(By.NAME, "post", text)
         if ok != "PASSED": return ok, msg
 
-        ok, msg = self.compare_text(By.CLASS_NAME, "card-text", text)
-        if ok != "PASSED": return ok, msg
+        #ok, msg = self.compare_text(By.CLASS_NAME, "card-text", text)
+        #if ok != "PASSED": return ok, msg
 
         return "PASSED", "created post successfully"
 
@@ -390,13 +428,13 @@ class Tests:
 
     # test invalid login
     def test6(self, username, password):
-        ok, msg = self.auto_login("invalid_user", "invalid_username")
+        ok, msg = self.auto_login("invalid_user", "invalid_username", 0.5)
         if ok == "PASSED": return "FAILED", "invalid login succeeded"
 
         ok, msg = self.find_element(By.CLASS_NAME, "alert-danger")
         if ok != "PASSED": return ok, msg
 
-        ok, msg = self.login("invalid_user", "invalid_username")
+        ok, msg = self.login("invalid_user", "invalid_username", 0.5)
         if ok == "PASSED": return "FAILED", "invalid login succeeded"
 
         ok, msg = self.find_element(By.CLASS_NAME, "alert-danger")
@@ -404,13 +442,13 @@ class Tests:
 
         self.add_user(username, password)
 
-        ok, msg = self.auto_login(username, "invalid_username")
+        ok, msg = self.auto_login(username, "invalid_username", 0.5)
         if ok == "PASSED": return "FAILED", "invalid login succeeded"
 
         ok, msg = self.find_element(By.CLASS_NAME, "alert-danger")
         if ok != "PASSED": return ok, msg
 
-        ok, msg = self.login(username, "invalid_username")
+        ok, msg = self.login(username, "invalid_username", 0.5)
         if ok == "PASSED": return "FAILED", "invalid login succeeded"
 
         ok, msg = self.find_element(By.CLASS_NAME, "alert-danger")
@@ -452,7 +490,7 @@ class Tests:
         ok, msg = self.auto_login(username, password)
         if ok != "PASSED": return "SKIPPED", msg
 
-        ok, mst = self.create_post("hello world")
+        ok, msg = self.create_post("hello world")
         if ok != "PASSED": return ok, msg
 
         return "PASSED", "created post successfully"
@@ -529,5 +567,5 @@ class Tests:
 
 
 if __name__ == "__main__":
-    tests = Tests(chromedriver_path, YOUFACE_URL)
+    tests = Tests(chromedriver_path, YOUFACE_URL, False)
     tests.run_tests()

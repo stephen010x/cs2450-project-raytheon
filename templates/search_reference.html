@@ -1,0 +1,81 @@
+{% extends "base2.html" %}
+
+{% block content %}
+
+
+<div class="row justify-content-md-center mb-4">
+    <h1>Search Reference</h1>
+</div>
+
+<div class="row justify-content-md-center">
+<pre style="white-space: pre-wrap; overflow-wrap: break-word;">
+
+<h3>Filters</h3>Filters are search keywords that will filter and exclude posts.
+
+    before:&lt;date&gt;    -  Filter posts before a time and date
+    after:&lt;date&gt;     -  Filter posts after a time and date
+    user:&lt;username&gt;  -  Filter posts by user
+
+<h5>Date Keywords</h5>    today
+    week
+    month
+    year
+    yesterday
+    yesterweek
+    yestermonth
+    yesteryear
+
+<h5>Examples</h5>    after:today       -  Show all posts posted today
+    before:today      -  Show all posts posted before today
+    after:10/10/2001  -  Show all posts posted after 10/10/2001
+    after:Oct-10-2001 -  Show all posts posted after 10/10/2001
+    after:week        -  Show all posts posted this week
+    user:john         -  Show all posts posted by the user 'john'
+
+
+
+
+<h3>Tags</h3>Tags are an implicit filter. All keywords that do not include the ':' character are treated like tags. <u>Tags are separated by spaces, NOT BY COMMAS.</u> When using the search, only the posts that match all of the tags will be displayed.
+
+<h5>Examples</h5>    cats
+    dogs
+    politics
+    <i>etc...</i>
+
+
+
+
+<h3>Exclusions</h3>To invert or exclude tags or filters, you can use the exclusion character '-'.
+
+<h5>Examples</h5>    -user:john      -  Excludes all posts from the user 'john'
+    -cats           -  Excludes all posts with the tag 'cats'
+
+
+
+
+<h3>Sorting</h3>Unlike filtering, the sort keyword will not exclude any posts, but will instead change the ordering of posts.
+
+    sort:newest     - sort posts by the newest published post
+    sort:oldest     - sort posts by the oldest published post
+    sort:rating     - (soon to be added)
+
+
+<h3>Example Searches</h3>
+    cats cake -dogs -user:jonny59 after:yestermonth sort:oldest
+
+
+
+
+
+
+
+
+
+
+
+    
+</pre>
+
+
+</div>
+{% endblock %}

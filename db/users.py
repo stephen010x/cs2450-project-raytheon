@@ -88,6 +88,11 @@ def get_user(db, username, password):
     
 
 
+def get_user_safe(db, username):
+    user = get_user_by_name(db, username)
+    user['passhash'] = None
+    return user
+
 
 
 def get_user_by_name(db, username):
