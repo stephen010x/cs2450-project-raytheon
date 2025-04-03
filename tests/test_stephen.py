@@ -1,4 +1,5 @@
 import sys
+sys.path.append('.')
 sys.path.append('..')
 
 from selenium import webdriver
@@ -464,7 +465,8 @@ class Tests:
         ok, msg = self.upload_file(selfpath)
         if ok != "PASSED": return ok, msg
 
-        self.remove_file(os.path.basename(selfpath))
+        try: self.remove_file(os.path.basename(selfpath))
+        except: return "FAILED", "file was not found in storage"
 
         return "PASSED", "uploaded a file to server successfully"
 
@@ -561,6 +563,10 @@ class Tests:
         print("Ending Tests:")
         print("{} Tests Ran: {} Tests Passed".format(run_counter, pass_counter))
 
+        if pass_counter != 10:
+            return False
+        return True
+
 
 
 
@@ -568,4 +574,7 @@ class Tests:
 
 if __name__ == "__main__":
     tests = Tests(chromedriver_path, YOUFACE_URL, False)
-    tests.run_tests()
+    if tests.run_tests():
+        exit(0)
+    else:
+        exit(1)
