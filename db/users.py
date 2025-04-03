@@ -23,6 +23,7 @@ def hash_password(password):
     # generate salt
     salt = bcrypt.gensalt()
     # hash password
+    #return bcrypt.hashpw(password.encode(), salt).decode('utf-8')
     return bcrypt.hashpw(password.encode(), salt).decode('utf-8')
 
 
