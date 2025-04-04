@@ -1,6 +1,6 @@
 flask
 markdown
-dateutil
+python-dateutil
 requests
 timeago
 tinydb
