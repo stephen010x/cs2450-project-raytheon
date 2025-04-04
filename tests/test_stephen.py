@@ -1,8 +1,9 @@
 import sys
 import os
 
-os.chdir("./tests")
-sys.path.append('..')
+print(os.path.dirname(os.path.abspath(__file__)) + "/..")
+os.chdir(os.path.dirname(os.path.abspath(__file__)) + "/..")
+sys.path.append('.')
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -27,7 +28,7 @@ from db import helpers, users
 
 from selenium.webdriver.chrome.options import Options
 options = Options()
-#options.add_argument("--headless")
+options.add_argument("--headless")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
@@ -76,7 +77,7 @@ class Tests:
             self.driver = webdriver.Chrome(service=service)
         else:
             self.driver = webdriver.Chrome(options=options)
-        self.db = tinydb.TinyDB('../db.json', sort_keys=True, indent=4, separators=(',', ': '))
+        self.db = tinydb.TinyDB('db.json', sort_keys=True, indent=4, separators=(',', ': '))
         self.usertable = self.db.table('users')
         self.filetable = self.db.table('files')
 
