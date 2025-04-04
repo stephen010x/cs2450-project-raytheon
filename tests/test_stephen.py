@@ -1,5 +1,7 @@
 import sys
-sys.path.append('.')
+import os
+
+os.chdir("./tests")
 sys.path.append('..')
 
 from selenium import webdriver
@@ -25,7 +27,7 @@ from db import helpers, users
 
 from selenium.webdriver.chrome.options import Options
 options = Options()
-options.add_argument("--headless")
+#options.add_argument("--headless")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
@@ -86,6 +88,7 @@ class Tests:
 
     def __del__(self):
         #self.delete_mock_database(self)
+        #os.remove("db.json")
         self.driver.quit()
         pass
 
@@ -135,16 +138,33 @@ class Tests:
 
 
     def wait_page_load(self, timeout=5):
-        WebDriverWait(driver, timeout).until(lambda driver: driver.execute_script("return document.readyState") == "complete")
+        try: WebDriverWait(self.driver, timeout).until(lambda driver: driver.execute_script("return document.readyState") == "complete")
+        except TimeoutException:
+            return "FAILED", "page failed to load"
+        return "PASSED", "page succeeded loading"
+
+
+
+    def get_page(self, url, timeout=5):
+        try: self.driver.get(url)
+        except: return "FAILED", "failed to connect to server"
+        ok, msg = self.wait_page_load(timeout)
+        if ok != "PASSED": return ok, msg
+        return "PASSED", msg
+            
         
 
 
     def auto_login(self, username, password, timeout=5):        
-        self.driver.get(self.url)
+        ok, msg = self.get_page(self.url)
+        if ok != "PASSED": return ok, msg
+        
         self.auto_logout()
         self.driver.add_cookie({"name": "username", "value": username})
         self.driver.add_cookie({"name": "password", "value": password})
-        self.driver.get(self.url)
+        
+        ok, msg = self.get_page(self.url)
+        if ok != "PASSED": return ok, msg
 
         if (not self.assert_not_url(self.url + "/loginscreen", timeout)):
             return "FAILED", "auto-login failed to get past login screen"
@@ -161,10 +181,14 @@ class Tests:
 
 
     def auto_logout(self):
-        self.driver.get(self.url)
+        ok, msg = self.get_page(self.url)
+        if ok != "PASSED": return ok, msg
+        
         self.driver.delete_cookie("username")
         self.driver.delete_cookie("password")
-        self.driver.get(self.url)
+        
+        ok, msg = self.get_page(self.url)
+        if ok != "PASSED": return ok, msg
 
         if (not self.assert_url(self.url + "/loginscreen")):
             return "FAILED", "auto-logout failed to return to login screen"
@@ -180,7 +204,7 @@ class Tests:
             return "FAILED", "failed to find the {} input entry".format(name)
         entry.send_keys(text)
         
-        return "PASSED", "succeeded to filling {} input entry".format(name)
+        return "PASSED", "succeeded filling the {} input entry".format(name)
 
 
 
@@ -223,7 +247,7 @@ class Tests:
 
 
 
-    def assert_url(self, url, timeout=10):
+    def assert_url(self, url, timeout=5):
         try: 
             WebDriverWait(self.driver, timeout).until(lambda driver: driver.current_url == url)
             return True
@@ -233,7 +257,8 @@ class Tests:
 
 
 
-    def assert_not_url(self, url, timeout=10):
+    def assert_not_url(self, url, timeout=5):
+        #WebDriverWait(self.driver, timeout).until(lambda driver: driver.current_url != url)
         try: 
             WebDriverWait(self.driver, timeout).until(lambda driver: driver.current_url != url)
             return True
@@ -242,7 +267,7 @@ class Tests:
 
 
 
-    def login(self, username, password, timeout=10):
+    def login(self, username, password, timeout=5):
         ok, msg = self.auto_logout()
         if ok != "PASSED": return "SKIPPED", msg
 
@@ -263,13 +288,14 @@ class Tests:
 
 
     def logout(self):
-        self.driver.get(self.url)
+        ok, msg = self.get_page(self.url)
+        if ok != "PASSED": return ok, msg
         
         ok, msg = self.click_button(By.CLASS_NAME, "navbar-toggler")
         if ok != "PASSED": return ok, msg
 
         # we need to wait for the animation to finish, apparently.
-        time.sleep(0.5)
+        time.sleep(1)
 
         ok, msg = self.click_button(By.CLASS_NAME, "btn-secondary")
         if ok != "PASSED": return ok, msg
@@ -342,9 +368,12 @@ class Tests:
 
 
     def upload_file(self, filepath):
-        self.driver.get(self.url + "/upload_test")
+        #self.driver.get(self.url + "/upload_test")
+        ok, msg = self.get_page(self.url + "/upload_test")
+        if ok != "PASSED": return ok, msg
 
         ok, msg = self.fill_entry(By.ID, "file_input", filepath)
+        #time.sleep(1000)
         if ok != "PASSED": return ok, msg
 
         ok, msg = self.click_button(By.ID, "upload_btn")
