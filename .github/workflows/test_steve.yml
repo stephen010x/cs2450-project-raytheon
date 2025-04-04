@@ -37,7 +37,7 @@ jobs:
       - name: Start Flask app in background
         run: |
           #nohup python youface.py > flask.log 2>&1 &
-          nohup python youface.py
+          nohup python youface.py &
           sleep 5
 
       - name: Run Selenium tests
