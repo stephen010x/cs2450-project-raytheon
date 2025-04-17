@@ -1,0 +1,28 @@
+{% extends "base2.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1>My Profile</h1>
+  <div class="card mb-3">
+    <div class="card-body">
+      <h3 class="card-title">{{ username }}</h3>
+      <p><strong>Joined:</strong> {{ join_date }}</p>
+      <p><strong>Total Posts:</strong> {{ post_count }}</p>
+    </div>
+  </div>
+
+  <h2>My Posts</h2>
+  {% if posts %}
+    <ul class="list-group">
+      {% for post in posts %}
+        <li class="list-group-item">
+          <p>{{ post.content }}</p>
+          <small class="text-muted">{{ post.created_at }}</small>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You haven't posted anything yet.</p>
+  {% endif %}
+</div>
+{% endblock %}
