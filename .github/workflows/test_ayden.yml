@@ -7,19 +7,13 @@ on:
       - "main"
   pull_request:
     branches:
-      - "main" 
+      - "main"
     paths:
       - ".github/workflows/test_ayden.yaml"
 
 jobs:
   selenium:
     runs-on: ubuntu-latest
-
-    services:
-      selenium:
-        image: selenium/standalone-chrome:latest
-        ports:
-          - 4444:4444
 
     steps:
       - name: Checkout repo
@@ -34,13 +28,22 @@ jobs:
         run: |
           pip install -r requirements.txt
           pip install selenium
+
+      - name: Install Chrome browser
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable
+
+      - name: Install ChromeDriver
+        run: |
+          sudo apt install -y chromium-chromedriver
+          sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
+
       - name: Start Flask app in background
         run: |
-          #nohup python youface.py > flask.log 2>&1 &
           nohup python youface.py &
           sleep 5
+
       - name: Run Selenium tests
-        env:
-          SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
         run: |
           python tests/test_profile.py
