@@ -17,7 +17,6 @@ class TestProfilePage(unittest.TestCase):
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-        # No need to set binary_location anymore when using Google Chrome
     
         cls.driver = webdriver.Chrome(options=options)
         cls.driver.implicitly_wait(10)
@@ -26,9 +25,12 @@ class TestProfilePage(unittest.TestCase):
         cls.driver.get("http://localhost:5000/loginscreen")
     
         try:
-            username_input = WebDriverWait(cls.driver, 10).until(
+            # Wait until the username field is actually present
+            WebDriverWait(cls.driver, 20).until(
                 EC.presence_of_element_located((By.NAME, "username"))
             )
+    
+            username_input = cls.driver.find_element(By.NAME, "username")
             username_input.send_keys("helloworld")
     
             password_input = cls.driver.find_element(By.NAME, "password")
@@ -37,8 +39,10 @@ class TestProfilePage(unittest.TestCase):
             login_button = cls.driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Login']")
             login_button.click()
     
-            WebDriverWait(cls.driver, 10).until(EC.url_contains("/profile"))
+            # Wait until profile page loads
+            WebDriverWait(cls.driver, 20).until(EC.url_contains("/profile"))
             cls.driver.get("http://localhost:5000/profile")
+    
         except Exception as e:
             print("[FAILED] - Could not complete login sequence:", e)
 
