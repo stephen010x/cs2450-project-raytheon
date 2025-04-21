@@ -14,6 +14,7 @@ class TestProfilePage(unittest.TestCase):
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
+        options.binary_location = "/snap/bin/chromium"
         cls.driver = webdriver.Chrome(options=options)
 
         # Load login page
