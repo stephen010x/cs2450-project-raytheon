@@ -12,33 +12,31 @@ class TestProfilePage(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         print("\nBeginning Tests - Profile Page")
-
+    
         options = Options()
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--user-data-dir=/tmp/chrome-user-data")
-        options.binary_location = "/snap/bin/chromium"
-
+        # No need to set binary_location anymore when using Google Chrome
+    
         cls.driver = webdriver.Chrome(options=options)
-        cls.driver.implicitly_wait(10)  # Global wait time
-
+        cls.driver.implicitly_wait(10)
+    
         # Load login page
         cls.driver.get("http://localhost:5000/loginscreen")
-
+    
         try:
             username_input = WebDriverWait(cls.driver, 10).until(
                 EC.presence_of_element_located((By.NAME, "username"))
             )
             username_input.send_keys("helloworld")
-
+    
             password_input = cls.driver.find_element(By.NAME, "password")
             password_input.send_keys("helloworld1!")
-
+    
             login_button = cls.driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Login']")
             login_button.click()
-
-            # After login, go to profile page
+    
             WebDriverWait(cls.driver, 10).until(EC.url_contains("/profile"))
             cls.driver.get("http://localhost:5000/profile")
         except Exception as e:
