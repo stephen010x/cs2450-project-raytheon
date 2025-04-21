@@ -1,6 +1,7 @@
 flask
 tinydb
 timeago
-
+markdown
 markdown2
-hashlib
+bcrypt
+python-dateutil
