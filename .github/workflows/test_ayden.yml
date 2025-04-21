@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "ayden"
+      - "main"
   pull_request:
     branches:
       - "main" 
