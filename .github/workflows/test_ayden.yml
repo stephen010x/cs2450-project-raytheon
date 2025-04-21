@@ -29,14 +29,16 @@ jobs:
           pip install -r requirements.txt
           pip install selenium
 
-      - name: Install Chrome browser
+      - name: Install Google Chrome
         run: |
-          sudo apt update
-          sudo apt install -y google-chrome-stable
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
       - name: Install ChromeDriver
         run: |
+          sudo apt update
           sudo apt install -y chromium-chromedriver
+          sudo ln -sf /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
 
       - name: Start Flask app in background
         run: |
