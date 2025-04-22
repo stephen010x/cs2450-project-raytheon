@@ -1,12 +1,74 @@
+root {
+    --bg-light: #F8FAFC;
+    --bg-dark: #0F172A;
+    --text-light: #F1F5F9;
+    --text-dark: #1E293B;
+    --primary: #3F8CFF;
+    --accent: #22D3EE;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Dark mode preference detected */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+    }
+
+    /* [data-bs-theme="dark"] body {
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+    }
+    
+    [data-bs-theme="light"] body {
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+    } */
+    
+
+
+    .navbar {
+        transition: background-color 0.3s ease;
+    }
+
+    .card {
+        background-color: #1E293B;
+        color: var(--text-light);
+      }
+}
+
 .jumbotron {
     padding: 0.5em 0.6em;
+
     h1 {
         font-size: 2em;
     }
+
     p {
         font-size: 1.2em;
+
         .btn {
             padding: 0.5em;
         }
     }
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    border-radius: 2rem;
+    padding: 0.5rem 1.5rem;
 }
