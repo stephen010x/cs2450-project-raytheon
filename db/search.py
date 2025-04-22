@@ -143,7 +143,10 @@ def _get_posts(db, query):
         else:
             mode = 'tag'
 
-        if not invert:
+        if mode == 'sort':
+            #print("token "+token)
+            sort = token
+        elif not invert:
             if mode == 'tag':
                 if tags_in is None: tags_in = []
                 tags_in.append(token)
@@ -153,6 +156,7 @@ def _get_posts(db, query):
             elif mode == 'user':   user_in = token
             elif mode == '_start': start   = token
             elif mode == '_end':   end     = token
+            else: return []
 
         else:
             if mode == 'tag':
@@ -163,8 +167,6 @@ def _get_posts(db, query):
             #elif mode == 'after' : before   = parse_date(token)
             elif mode == 'user'  : user_out = token
 
-        if mode == 'sort':
-            sort = token
                 
         #except Exception as e:
         #    traceback.print_exc()
