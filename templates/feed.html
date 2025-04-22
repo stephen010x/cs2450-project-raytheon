@@ -30,9 +30,9 @@
         {% if file.ext in ["mp4", "webm", "avi", "mov"] %}
           <div style="display: inline-block; vertical-align: top;">
           {% if post.files | length == 1 %}
-          <video controls style="max-width: 680px; height: auto; margin-top:5px;">
+          <video controls style="max-width: calc(100%-20px); height: auto; margin-top:5px;">
           {% else %}
-          <video controls style="max-width: 340px; height: auto; margin-top:5px;">
+          <video controls style="max-width: 50%; height: auto; margin-top:5px;">
           {% endif %}
     	     <source src="{{ file.url }}" type="video/{{ file.ext }}">
     	     <a href="{{ file.url }}" target="_blank">{{ file.name }}</a>
@@ -48,7 +48,7 @@
 	      <div style="display: inline-block; vertical-align: top; margin-top:5px;">
             <img src="{{ file.url }}" alt="{{ file.name }}"
 	          {% if post.files | length == 1 %}
-	          style="max-width: 680px; height: auto;">
+	          style="max-width: 100%; height: auto;">
               {% else %}
 	          style="max-width: 340px; height: auto;">
               {% endif %}
