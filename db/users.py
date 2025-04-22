@@ -23,6 +23,7 @@ def hash_password(password):
     # generate salt
     salt = bcrypt.gensalt()
     # hash password
+    #return bcrypt.hashpw(password.encode(), salt).decode('utf-8')
     return bcrypt.hashpw(password.encode(), salt).decode('utf-8')
 
 
@@ -87,6 +88,11 @@ def get_user(db, username, password):
     return user if verify_password(user['passhash'], password) else None
     
 
+
+def get_user_safe(db, username):
+    user = get_user_by_name(db, username)
+    user['passhash'] = None
+    return user
 
 
 

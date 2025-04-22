@@ -68,32 +68,88 @@ def logout():
     resp.set_cookie('password', '', expires=0)
     return resp
 
+
+
+
+def user_login_gate():
+    db = helpers.load_db()
+    username = flask.request.cookies.get('username')
+    password = flask.request.cookies.get('password')
+    if username is None and password is None:
+        return False, flask.redirect(flask.url_for('login.loginscreen'))
+    user = users.get_user(db, username, password)
+    if not user:
+        flask.flash('Invalid credentials. Please try again.', 'danger')
+        return False, flask.redirect(flask.url_for('login.loginscreen'))
+    return True, None
+
+
+def get_my_user():
+    username = flask.request.cookies.get('username')
+    password = flask.request.cookies.get('password')
+    db = helpers.load_db()
+    return users.get_user(db, username, password)
+
+
+
 @blueprint.route('/')
 def index():
     """Serves the main feed page for the user."""
     db = helpers.load_db()
 
     # make sure the user is logged in
-    username = flask.request.cookies.get('username')
-    password = flask.request.cookies.get('password')
-    if username is None and password is None:
-        return flask.redirect(flask.url_for('login.loginscreen'))
-    user = users.get_user(db, username, password)
-    if not user:
-        flask.flash('Invalid credentials. Please try again.', 'danger')
-        return flask.redirect(flask.url_for('login.loginscreen'))
+    ok, ret = user_login_gate()
+    if not ok: return ret
 
-    # get the info for the user's feed
+    user = get_my_user()
     friends = users.get_user_friends(db, user)
-    #all_posts = []
-    #for friend in friends + [user]:
-    #    all_posts += posts.get_posts(db, friend)
-    # sort posts
-    #print(all_posts)
-    #sorted_posts = sorted(all_posts, key=lambda post: post['time'], reverse=True)
 
+    # get the posts for feed
     sorted_posts = dbsearch.get_posts(db, "sort:newest _end:50")
 
     return flask.render_template('home.html', title=copy.title,
-            subtitle=copy.subtitle, user=user, username=username,
+            subtitle=copy.subtitle, user=user, username=user['username'],
             friends=friends, posts=sorted_posts)
+
+
+
+
+@blueprint.route('/plain/<path>')
+def plain(path):
+    db = helpers.load_db()
+
+    # make sure the user is logged in
+    ok, ret = user_login_gate()
+    if not ok: return ret
+
+    return flask.render_template(path+'.html')
+
+
+
+
+@blueprint.route('/self/<path>')
+def self(path):
+    db = helpers.load_db()
+    
+    # make sure the user is logged in
+    ok, ret = user_login_gate()
+    if not ok: return ret
+
+    myuser = get_my_user()
+    friends = users.get_user_friends(db, myuser)
+
+    return flask.render_template(path+'.html', myuser=myuser, friends=friends)
+
+
+@blueprint.route('/user/<username>/<path>')
+def user(username, path):
+    db = helpers.load_db()
+    
+    # make sure the user is logged in
+    ok, ret = user_login_gate()
+    if not ok: return ret
+
+    myuser = get_my_user()
+    user = get_user_safe(db, username)
+
+    return flask.render_template(path+'.html', myuser=myuser, user=user)
