@@ -45,7 +45,7 @@ def add_file(db, user, file):
         'user' : user['username'] if user else 'anonymous',
         'time' : time.time(),
     }
-    print(entry)
+    #print(entry)
     files.insert(entry)
     
     # returns an object-like structure with the above properties
