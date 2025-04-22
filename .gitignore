@@ -6,3 +6,5 @@ files/*
 *.diff.*
 *.old.*
 .DS_Store
+AirDrop
+General
