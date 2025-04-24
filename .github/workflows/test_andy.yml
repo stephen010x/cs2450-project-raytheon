@@ -61,4 +61,4 @@ jobs:
 
       - name: Run Selenium tests
         run: |
-          python tests/test_profile.py
+          python tests/test_passwords.py
