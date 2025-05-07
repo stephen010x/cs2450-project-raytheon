@@ -38,7 +38,11 @@ To run this project, simply navigate to the main directory and run this file: \
 ## Screenshots
 
 ![homepage.webp](media/homepage.webp)
+
 ![markdown.webp](media/markdown.webp)
+
 ![homepage-media.webp](media/homepage-media.webp)
+
 ![search.webp](media/search.webp)
+
 ![login.webp](media/login.webp)
