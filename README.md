@@ -1,13 +1,13 @@
 # YouFace README
 
-This fork of YouFace is a mock social media platform. Originally designed as an assignment for CS 2450 at Utah Tech University, and further modified by the people in the teamname 'Raytheon' group.
+This fork of YouFace is a mock social media platform. Originally designed as an assignment for CS 2450 at Utah Tech University, and further modified by the those in the teamname 'Raytheon' group.
 
-The original project can be found here:  [cs2450-project-raytheon](https://github.com/JeffCompasClassrooms/cs2450-project-raytheon)
+The original fork can be found here:  [cs2450-project-raytheon](https://github.com/JeffCompasClassrooms/cs2450-project-raytheon)
 
 And the base project can be found here: [cs2450-project-youface](https://github.com/JeffCompasClassrooms/jeffcompasclassrooms-s25-cs2450-cs2450-project-youface)
 
 The people who contributed to this fork were: \
-[Supreme Executive Chairman Harris](https://github.com/stephen010x) (me) \
+[stephen010x](https://github.com/stephen010x) (me) \
 [UnwornPlanet](https://github.com/UnwornPlanet) \
 [d00500395](https://github.com/d00500395) \
 Andy Rich
