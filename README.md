@@ -28,7 +28,7 @@ Andy Rich
 - Add searchable tags to post
 - Full markdown support
 - Encrypted passwords
-- Advanced post search system
+- Post search bar with advanced search options
 
 ## Running the Project
 
@@ -37,12 +37,14 @@ To run this project, simply navigate to the main directory and run this file: \
 
 ## Screenshots
 
+### Homepage
 ![homepage.webp](media/homepage.webp)
 
+### Markdown
 ![markdown.webp](media/markdown.webp)
 
+### Post Media
 ![homepage-media.webp](media/homepage-media.webp)
 
+### Search Bar
 ![search.webp](media/search.webp)
-
-![login.webp](media/login.webp)
